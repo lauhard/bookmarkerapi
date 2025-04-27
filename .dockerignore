@@ -1,0 +1,11 @@
+#docker ignore file for bookmarkapi slim php project
+.git
+node_modules/
+vendor/
+.env
+.env.*
+docker-compose.yml
+docker-compose.*
+Dockerfile
+Dockerfile.*
+.cache

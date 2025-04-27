@@ -1,0 +1,50 @@
+# Composer Vendor Ordner
+/vendor/
+
+# Umgebungsdateien
+.env
+.env.*
+
+# Logfiles
+/logs/
+*.log
+
+# Cache und temporäre Dateien
+/cache/
+/tmp/
+
+# PHPUnit
+phpunit.xml
+phpunit.xml.dist
+
+# Docker
+docker-compose.override.yml
+docker-compose.local.yml
+
+# IDE / Editor Dateien
+/.idea/
+/.vscode/
+/*.sublime-project
+/*.sublime-workspace
+
+# Betriebssystem-Dateien
+.DS_Store
+Thumbs.db
+
+# Node (wenn z.B. Frontend oder Assets dabei sind)
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build-Ordner (optional, falls Frontend-Assets gebaut werden)
+dist/
+build/
+public/build/
+public/dist/
+
+# Backup- oder temporäre Dateien
+*.bak
+*.tmp
+*.swp
+*.swo

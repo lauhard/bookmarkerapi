@@ -1,0 +1,58 @@
+# multistage build for php 8.2.28 composer 2.8.8 and slim 4.*
+# php-cli is used for the build stage, it is used as throwaway stage
+# php-fpm is used for the final stage - it is used for running the application like a web server
+FROM php:8.3-cli-bookworm as builder
+
+# Install dependencies
+# git is needed for composer install
+# libzip-dev is needed for zip extension
+# unzip is needed for zip extension
+# libpq-dev is needed for postgresql extension
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    unzip \
+    git \
+    libpq-dev
+
+# install required extensions
+# pdo and postgresql extension
+RUN docker-php-ext-install pdo pdo_pgsql
+
+#install composer
+COPY --from=composer:2.8.8 /usr/bin/composer /usr/bin/composer
+
+#set working directory
+WORKDIR /app
+#copy composer.json and composer.lock
+COPY composer.json ./
+COPY composer.lock ./
+
+#install dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+#copy all files
+COPY . .
+
+# final stage - runner
+FROM php:8.3-fpm-bookworm as runner
+
+# Install dependencies
+# no git needed because composer is already installed
+RUN apt-get update && apt-get install -y libzip-dev unzip libpq-dev
+
+# install required extensions
+RUN docker-php-ext-install pdo pdo_pgsql
+
+WORKDIR /var/www/html
+
+#copy composer from builder stage from /app to /var/www/html
+COPY --from=builder /app /var/www/html/
+# permissions
+RUN chown -R www-data:www-data /var/www/html
+
+EXPOSE 9000
+
+#CMD ["php-fpm"]
+CMD ["php", "-S", "0.0.0.0:9000", "-t", "/var/www/html/public"]
+
+
