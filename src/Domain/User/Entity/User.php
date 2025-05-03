@@ -8,12 +8,12 @@ class User
 {
     // dieser Construktor verwendet das Property Promotion Feature von PHP 8.0
     public function __construct(
-        private ?string $id,
+        private ?string $id = null,
         private string $email,
-        private string $password,
+        private ?string $password,
         private string $nickname,
         private string $avatarUrl,
-        private ?string $role,
+        private string $role = "user",
         private ?\DateTimeImmutable $createdAt,
         private ?\DateTimeImmutable $updatedAt,
     ) {}
@@ -21,7 +21,7 @@ class User
 
 
     //Funktionen um die Properties zu bekommen
-    public function getId(): string
+    public function getId(): string | null
     {
         return $this->id;
     }
@@ -45,11 +45,11 @@ class User
     {
         return $this->role;
     }
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable | null
     {
         return $this->createdAt;
     }
-    public function getUpdatedAt(): \DateTimeImmutable
+    public function getUpdatedAt(): \DateTimeImmutable | null
     {
         return $this->updatedAt;
     }

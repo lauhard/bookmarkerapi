@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Dto\User;
 
+use App\Application\Validation\ValidatePropertiesTrait;
 use App\Domain\Exception\ValidationException;
 
 /**
@@ -11,8 +12,9 @@ use App\Domain\Exception\ValidationException;
  *
  * @package App\Application\User\Dto
  */
-class RegisterUserDto
+class UserRegisterDto
 {
+    use ValidatePropertiesTrait;
     public const REQUIRED_FIELDS = ['email', 'password', 'nickname'];
     public const ALLOWED_FIELDS = ['email', 'password', 'nickname', 'avatar_url'];
 
@@ -25,24 +27,15 @@ class RegisterUserDto
 
     public static function fromArray(array $data): self
     {
-        $errors = [];
-
         // Check missing required properties
-        foreach (self::REQUIRED_FIELDS as $property) {
-            if (!array_key_exists($property, $data)) {
-                $errors[$property] = 'Missing required property: ' . $property;
-            }
+        $requiredFieldError = self::requiredProperties($data, self::REQUIRED_FIELDS);
+        if (!empty($requiredFieldError)) {
+            throw new ValidationException(errors: $requiredFieldError);
         }
-
         // Check invalid properties
-        foreach (array_keys($data) as $property) {
-            if (!in_array($property, self::ALLOWED_FIELDS, true)) {
-                $errors[$property] = 'Invalid property: ' . $property;
-            }
-        }
-
-        if (!empty($errors)) {
-            throw new ValidationException(errors: $errors);
+        $allowedFieldError = self::allowedProperties($data, self::ALLOWED_FIELDS);
+        if (!empty($allowedFieldError)) {
+            throw new ValidationException(errors: $allowedFieldError);
         }
 
         //this is to filter the data and only keep the allowed fields

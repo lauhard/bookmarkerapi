@@ -17,37 +17,17 @@ class UserFactory
      * @param array $data
      * @return User
      */
-    public static function fromArray(array $data): User
+    public static function fromArrayToUser(array $data): User
     {
         return new User(
             $data['id'],
             $data['email'],
-            $data['password'],
+            $data['password'] ?? null,
             $data['nickname'],
             $data['avatar_url'],
             $data['role'],
-            new \DateTimeImmutable($data['created_at']),
-            new \DateTimeImmutable($data['updated_at']),
-        );
-    }
-
-    /**
-     * From DTO to User
-     *
-     * @param RegisterUserDto $data
-     * @return User
-     */
-    public static function fromDto(RegisterUserDto $data): User
-    {
-        return new User(
-            null,
-            $data->getEmail(),
-            $data->getPassword(),
-            $data->getNickname(),
-            $data->getAvatarUrl(),
-            'user', // default role
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            isset($data['created_at']) ? new \DateTimeImmutable($data['created_at']) : null,
+            isset($data['updated_at']) ? new \DateTimeImmutable($data['updated_at']) : null,
         );
     }
 }

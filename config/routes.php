@@ -1,10 +1,12 @@
 <?php
 
-use App\Application\Actions\User\CreateUserAction;
-use App\Application\Actions\Bookmark\ListBookmarkAction;
 use Slim\App;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
+use App\Application\Actions\User\UserLoginAction;
+use App\Application\Actions\User\UserCreateAction;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Application\Actions\Bookmark\ListBookmarkAction;
 
 return function (App $app) {
     $app->get('/', function (Request $request, Response $response) {
@@ -17,12 +19,13 @@ return function (App $app) {
         return $response->withStatus(200);
     });
 
-
-
-
-    $app->get('/bookmarks', ListBookmarkAction::class);
-    $app->post('/register', CreateUserAction::class);
-
+    $app->group('/auth', function (RouteCollectorProxy $group) {
+        $group->post('/register', UserCreateAction::class);
+        $group->post('/login', UserLoginAction::class);
+    });
+    $app->group('/api', function (RouteCollectorProxy $group) {
+        $group->get('/bookmarks', ListBookmarkAction::class);
+    });
 
     // Placeholder response
     //$data = [

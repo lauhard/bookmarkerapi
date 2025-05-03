@@ -1,13 +1,15 @@
 <?php
 
+
 use Slim\App;
 use Slim\Factory\AppFactory;
-use App\Domain\User\Entity\User;
+use App\Responder\JsonResponder;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
-use App\Domain\Bookmark\BookmarkService;
+use App\Infrastruktur\Auth\TokenIssuer;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use App\Domain\User\Auth\TokenIssuerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
@@ -66,4 +68,13 @@ return [
     UserRepositoryInterface::class => function ($c) {
         return new PostgresUserRepository($c->get(PDO::class));
     },
+    JsonResponder::class => function (ContainerInterface $c) {
+        return new JsonResponder($c->get(ResponseFactoryInterface::class));
+    },
+    TokenIssuerInterface::class => function (ContainerInterface $c) {
+        $jwtSettings = $c->get('settings')['jwt'];
+        return new TokenIssuer($jwtSettings);
+    },
+
+
 ];

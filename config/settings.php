@@ -37,6 +37,13 @@ $settings = [
         'path' => __DIR__ . '/../logs/',
         'level' => Psr\Log\LogLevel::DEBUG,
     ],
+    'jwt' => [
+        'secret' => getenv('JWT_SECRET') ?: 'dev',
+        'algorithm' => 'HS256',
+        'issuer' => getenv('JWT_ISSUER') ?: 'http://localhost:9000',
+        'audience' => getenv('JWT_AUDIENCE') ?: 'http://localhost:9000',
+        'expiration_time' => getenv('JWT_EXPIRATION') ?: 3600, // 1 hour
+    ],
 ];
 
 // 1. Lokale env-Datei einbinden, z. B. `env.dev.php`, `env.prod.php`

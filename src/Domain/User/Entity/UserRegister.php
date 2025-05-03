@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Entity;
 
-class RegisterUser
+class UserRegister
 {
     // dieser Construktor verwendet das Property Promotion Feature von PHP 8.0
     public function __construct(

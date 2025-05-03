@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Service;
 
+use App\Application\Dto\User\UserRegisterDto;
+use App\Application\Dto\User\UserResponseDto;
 use App\Domain\User\Entity\User;
-use App\Application\Dto\User\RegisterUserDto;
-use App\Domain\User\Factory\RegisterUserFactory;
+use App\Domain\User\Factory\UserRegisterFactory;
 use App\Domain\User\Exception\EmailExistException;
 use App\Domain\User\Exception\NickNameExistException;
 use App\Domain\User\Repository\UserRepositoryInterface;
@@ -20,23 +21,37 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function registerUser(RegisterUserDto $userData): ?User
+    public function registerUser(UserRegisterDto $user_data): ?array //was soll zurückgegeben werden
     {
         // Validate user data
-        if ($this->userRepository->findByEmail($userData->getEmail())) {
+        if ($this->userRepository->findByEmail($user_data->getEmail())) {
             // throw new UserAlreadyExistsException('A user with this email already exists.');
             throw new EmailExistException();
         }
-        if ($this->userRepository->findByNickName($userData->getNickname())) {
+        if ($this->userRepository->findByNickName($user_data->getNickname())) {
             // throw new UserAlreadyExistsException('A user with this email already exists.');
             throw new NickNameExistException();
         }
 
         //hash password
-        $hashedPassword = password_hash($userData->getPassword(), PASSWORD_ARGON2ID);
-        $registerUser = RegisterUserFactory::fromDto($userData, $hashedPassword);
+        $hashed_password = password_hash($user_data->getPassword(), PASSWORD_ARGON2ID);
+        $user_register = UserRegisterFactory::fromDto($user_data, $hashed_password);
         // Save user to the database
-        $user = $this->userRepository->save($registerUser);
-        return $user;
+        $new_user = $this->userRepository->save($user_register);
+        return UserResponseDto::fromUser($new_user)->jsonSerialize();
+    }
+
+    public function loginUser(string $email, string $password): UserResponseDto|null
+    {
+        // Validate user data
+        $user = $this->userRepository->findByEmail($email);
+        if (!$user) {
+            return null;
+        }
+        if (!password_verify($password, $user->getPassword())) {
+            return null;
+        }
+
+        return UserResponseDto::fromUser($user);
     }
 }
