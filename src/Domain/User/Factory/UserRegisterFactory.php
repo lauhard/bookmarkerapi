@@ -20,7 +20,7 @@ class UserRegisterFactory
         return new UserRegister(
             $data->getEmail(),
             $hasedPassword,
-            $data->getNickname(),
+            $data->getName(),
             $data->getAvatarUrl(),
         );
     }

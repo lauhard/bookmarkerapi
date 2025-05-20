@@ -10,7 +10,7 @@ class UserRegister
     public function __construct(
         private string $email,
         private string $password,
-        private string $nickname,
+        private string $name,
         private string $avatarUrl,
         private string $role = 'user', //standard rolle 'user' vergibt postgres
     ) {}
@@ -23,9 +23,9 @@ class UserRegister
     {
         return $this->password;
     }
-    public function getNickname(): string
+    public function getName(): string
     {
-        return $this->nickname;
+        return $this->name;
     }
     public function getAvatarUrl(): string
     {

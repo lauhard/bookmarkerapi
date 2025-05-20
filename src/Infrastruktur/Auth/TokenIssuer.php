@@ -11,11 +11,12 @@ use DateTimeImmutable;
 use App\Domain\User\Entity\User;
 use App\Domain\User\Auth\TokenIssuerInterface;
 
+
 class TokenIssuer implements TokenIssuerInterface
 {
     private string $secretKey;
     private string $algorithm;
-    private int $expirationTime;
+    private string $expirationTime;
     private string $issuer;
     private string $audience;
     private DateTimeImmutable $notBefore;
@@ -48,7 +49,6 @@ class TokenIssuer implements TokenIssuerInterface
             'jti' => $this->jwtId, // JWT ID
             'uid' => $user->getId(), // User id
             'email' => $user->getEmail(), // User email
-            'nickname' => $user->getNickname(), // User nickname
             'role' => $user->getRole(), // User role
         ];
 

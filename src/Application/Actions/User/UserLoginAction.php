@@ -41,20 +41,19 @@ class UserLoginAction
             email: $loginUser->getEmail(),
             password: $loginUser->getPassword()
         );
-        $auth_result = new AuthResultDto(
-            id: $user->getId(),
-            email: $user->getEmail(),
-            nickname: $user->getNickname(),
-            role: $user->getRole()
-        );
-
-
         if (!$user) {
-            return $this->jsonResponder->error(
+            return $this->jsonResponder->fieldError(
                 message: 'Invalid email or password',
+                field: 'email',
                 status: 401
             );
         }
+        $auth_result = new AuthResultDto(
+            id: $user->getId(),
+            email: $user->getEmail(),
+            name: $user->getName(),
+            role: $user->getRole()
+        );
         $token = $this->tokenIssuer->issueToken($auth_result);
         $user->setToken($token);
         return $this->jsonResponder->success(

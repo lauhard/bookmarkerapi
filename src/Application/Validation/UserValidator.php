@@ -32,11 +32,11 @@ class UserValidator
             }
         }
 
-        if (!isset($data['nickname'])) {
-            $errors['nickname'] = 'Nickname is required';
+        if (!isset($data['name'])) {
+            $errors['name'] = 'Name is required';
         } else {
-            if (!self::validateNickname($data['nickname'])) {
-                $errors['nickname'] = 'Nickname must be between 3 and 20 characters long';
+            if (!self::validateNickname($data['name'])) {
+                $errors['name'] = 'Name must be between 3 and 20 characters long';
             }
         }
 

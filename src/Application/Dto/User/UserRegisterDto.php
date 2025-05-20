@@ -15,13 +15,13 @@ use App\Domain\Exception\ValidationException;
 class UserRegisterDto
 {
     use ValidatePropertiesTrait;
-    public const REQUIRED_FIELDS = ['email', 'password', 'nickname'];
-    public const ALLOWED_FIELDS = ['email', 'password', 'nickname', 'avatar_url'];
+    public const REQUIRED_FIELDS = ['email', 'password', 'name'];
+    public const ALLOWED_FIELDS = ['email', 'password', 'name', 'avatar_url'];
 
     public function __construct(
         public string $email,
         public string $password,
-        public string $nickname,
+        public string $name,
         public ?string $avatar_url = null
     ) {}
 
@@ -44,7 +44,7 @@ class UserRegisterDto
         return new self(
             email: $filtered['email'],
             password: $filtered['password'],
-            nickname: $filtered['nickname'],
+            name: $filtered['name'],
             avatar_url: $filtered['avatar_url'] ?? ""
         );
     }
@@ -56,9 +56,9 @@ class UserRegisterDto
     {
         return $this->password;
     }
-    public function getNickname(): string
+    public function getName(): string
     {
-        return $this->nickname;
+        return $this->name;
     }
     public function getAvatarUrl(): ?string
     {

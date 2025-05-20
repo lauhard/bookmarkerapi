@@ -72,6 +72,7 @@ return [
         return new JsonResponder($c->get(ResponseFactoryInterface::class));
     },
     TokenIssuerInterface::class => function (ContainerInterface $c) {
+
         $jwtSettings = $c->get('settings')['jwt'];
         return new TokenIssuer($jwtSettings);
     },

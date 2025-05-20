@@ -9,7 +9,7 @@ class AuthResultDto
     public function __construct(
         public string $id,
         public string $email,
-        public string $nickname,
+        public string $name,
         public string $role = 'user',
     ) {}
 
@@ -21,9 +21,9 @@ class AuthResultDto
     {
         return $this->email;
     }
-    public function getNickname(): string
+    public function getName(): string
     {
-        return $this->nickname;
+        return $this->name;
     }
     public function getRole(): string
     {

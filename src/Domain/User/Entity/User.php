@@ -11,7 +11,7 @@ class User
         private ?string $id = null,
         private string $email,
         private ?string $password,
-        private string $nickname,
+        private string $name,
         private string $avatarUrl,
         private string $role = "user",
         private ?\DateTimeImmutable $createdAt,
@@ -33,9 +33,9 @@ class User
     {
         return $this->password;
     }
-    public function getNickname(): string
+    public function getName(): string
     {
-        return $this->nickname;
+        return $this->name;
     }
     public function getAvatarUrl(): string
     {

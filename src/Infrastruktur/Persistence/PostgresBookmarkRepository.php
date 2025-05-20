@@ -14,8 +14,9 @@ class PostgresBookmarkRepository implements BookmarkRepositoryInterface
 
     public function findAll(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM bookmarker.bookmarks ORDER BY id DESC");
+        $stmt = $this->pdo->query("SELECT * FROM bookmarker.bookmark ORDER BY id DESC");
         $rows = $stmt->fetchAll();
-        return array_map(fn($row) => new Bookmark($row['id'], $row['title'], $row['url']), $rows);
+
+        return array_map(fn($row) => new Bookmark($row['id'], $row['page_title'], $row['url']), $rows);
     }
 }

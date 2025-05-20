@@ -12,7 +12,7 @@ class UserResponseDto implements JsonSerializable
     public function __construct(
         public string $id,
         public string $email,
-        public string $nickname,
+        public string $name,
         public ?string $avatar_url = null,
         public string $role = 'user',
         public ?string $token = null,
@@ -27,7 +27,7 @@ class UserResponseDto implements JsonSerializable
         return new self(
             id: $user->getId(),
             email: $user->getEmail(),
-            nickname: $user->getNickname(),
+            name: $user->getName(),
             avatar_url: $user->getAvatarUrl(),
             role: $user->getRole(),
             created_at: $user->getCreatedAt()?->format('Y-m-d H:i:s'),
@@ -51,9 +51,9 @@ class UserResponseDto implements JsonSerializable
     {
         return $this->email;
     }
-    public function getNickname(): string
+    public function getName(): string
     {
-        return $this->nickname;
+        return $this->name;
     }
     public function getAvatarUrl(): ?string
     {
@@ -77,7 +77,7 @@ class UserResponseDto implements JsonSerializable
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'nickname' => $this->nickname,
+            'name' => $this->name,
             'avatar_url' => $this->avatar_url,
             'role' => $this->role,
             'token' => $this->token,

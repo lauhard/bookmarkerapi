@@ -23,7 +23,7 @@ class UserFactory
             $data['id'],
             $data['email'],
             $data['password'] ?? null,
-            $data['nickname'],
+            $data['name'],
             $data['avatar_url'],
             $data['role'],
             isset($data['created_at']) ? new \DateTimeImmutable($data['created_at']) : null,

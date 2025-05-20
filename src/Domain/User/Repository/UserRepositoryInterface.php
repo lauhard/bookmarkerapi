@@ -13,6 +13,6 @@ interface UserRepositoryInterface
     public function delete(int $id): void;
     public function update(User $user): void;
     public function findByEmail(string $email): ?User;
-    public function findByNickName(string $email): ?User;
+    public function findByName(string $name): ?User;
     public function findById(int $id): ?User;
 }

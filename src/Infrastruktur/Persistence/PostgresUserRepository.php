@@ -19,21 +19,21 @@ class PostgresUserRepository implements UserRepositoryInterface
             "INSERT INTO bookmarker.users (
                 email,
                 password,
-                nickname,
+                name,
                 avatar_url,
                 role
             ) VALUES (
                 :email,
                 :password,
-                :nickname,
+                :name,
                 :avatar_url,
                 :role
-            ) RETURNING id, email, nickname, avatar_url, role, created_at, updated_at"
+            ) RETURNING id, email, name, avatar_url, role, created_at, updated_at"
         );
         $stmt->execute([
             'email' => $user->getEmail(),
             'password' => $user->getPassword(),
-            'nickname' => $user->getNickname(),
+            'name' => $user->getName(),
             'avatar_url' => $user->getAvatarUrl(),
             'role' => $user->getRole(),
         ]);
@@ -49,11 +49,11 @@ class PostgresUserRepository implements UserRepositoryInterface
 
     public function update(User $user): void
     {
-        $stmt = $this->pdo->prepare("UPDATE bookmarker.users SET email = :email, nickname = :nickname, avatar_url = :avatar_url WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE bookmarker.users SET email = :email, name = :name, avatar_url = :avatar_url WHERE id = :id");
         $stmt->execute([
             'id' => $user->getId(),
             'email' => $user->getEmail(),
-            'nickname' => $user->getNickname(),
+            'name' => $user->getName(),
             'avatar_url' => $user->getAvatarUrl(),
         ]);
     }
@@ -66,10 +66,10 @@ class PostgresUserRepository implements UserRepositoryInterface
         return $row ? UserFactory::fromArrayToUser($row) : null;
     }
 
-    public function findByNickname(string $nickname): ?User
+    public function findByName(string $name): ?User
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM bookmarker.users WHERE nickname = :nickname");
-        $stmt->execute(['nickname' => $nickname]);
+        $stmt = $this->pdo->prepare("SELECT * FROM bookmarker.users WHERE name = :name");
+        $stmt->execute(['name' => $name]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? UserFactory::fromArrayToUser($row) : null;
     }

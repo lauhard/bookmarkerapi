@@ -28,7 +28,7 @@ class UserService
             // throw new UserAlreadyExistsException('A user with this email already exists.');
             throw new EmailExistException();
         }
-        if ($this->userRepository->findByNickName($user_data->getNickname())) {
+        if ($this->userRepository->findByName($user_data->getName())) {
             // throw new UserAlreadyExistsException('A user with this email already exists.');
             throw new NickNameExistException();
         }

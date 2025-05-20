@@ -29,4 +29,15 @@ class JsonResponder
         $response->getBody()->write(json_encode(['error' => $message], JSON_PRETTY_PRINT));
         return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
     }
+    public function fieldError(string $message, string $field, int $status = 400): ResponseInterface
+    {
+        $response = $this->responseFactory->createResponse($status);
+        $error = [
+            'errors' => [
+                $field => $message,
+            ],
+        ];
+        $response->getBody()->write(json_encode($error, JSON_PRETTY_PRINT));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
+    }
 }

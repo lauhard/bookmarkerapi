@@ -1,5 +1,7 @@
 <?php
-$env = $_ENV['APP_ENV'] ??= $_SERVER['APP_ENV'] ?? 'dev'; //not used at the moment
+
+
+//$env = $_ENV['APP_ENV'] ??= $_SERVER['APP_ENV'] ?? 'dev'; //not used at the moment
 
 error_reporting(0);
 ini_set('display_errors', '0');
@@ -11,7 +13,8 @@ $settings = [
     'debug' => $env !== 'prod',
     'log_errors' => true,
     'error' => [
-        'display_error_details' => $env !== 'prod',
+        //'display_error_details' => $env !== 'prod',
+        'display_error_details' => true,
     ],
 
     // Standard DB Settings (können überschrieben werden)
@@ -38,7 +41,7 @@ $settings = [
         'level' => Psr\Log\LogLevel::DEBUG,
     ],
     'jwt' => [
-        'secret' => getenv('JWT_SECRET') ?: 'dev',
+        'secret' => getenv('JWT_SECRET'),
         'algorithm' => 'HS256',
         'issuer' => getenv('JWT_ISSUER') ?: 'http://localhost:9000',
         'audience' => getenv('JWT_AUDIENCE') ?: 'http://localhost:9000',
@@ -47,11 +50,11 @@ $settings = [
 ];
 
 // 1. Lokale env-Datei einbinden, z. B. `env.dev.php`, `env.prod.php`
-$envOverrideFile = __DIR__ . '/env.' . $env . '.php';
-if (file_exists($envOverrideFile)) {
-    $overrideFn = require $envOverrideFile;
-    if (is_callable($overrideFn)) {
-        $settings = $overrideFn($settings);
-    }
-}
+//$envOverrideFile = __DIR__ . '/env.' . $env . '.php';
+//if (file_exists($envOverrideFile)) {
+//    $overrideFn = require $envOverrideFile;
+//    if (is_callable($overrideFn)) {
+//        $settings = $overrideFn($settings);
+//    }
+//}
 return $settings;

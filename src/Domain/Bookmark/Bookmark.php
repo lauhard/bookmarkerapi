@@ -6,25 +6,25 @@ namespace App\Domain\Bookmark;
 
 class Bookmark
 {
-    private ?int $id;
-    private string $title;
+    private ?string $id;
+    private string $page_title;
     private string $url;
 
     //constructor
-    public function __construct(?int $id, string $title, string $url)
+    public function __construct(?string $id, string $page_title, string $url)
     {
         $this->id    = $id;
-        $this->title = $title;
-        $this->url   = $url;
+        $this->page_title = $page_title;
+        $this->url = $url;
     }
     //getters
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
     public function getTitle(): string
     {
-        return $this->title;
+        return $this->page_title;
     }
     public function getUrl(): string
     {
