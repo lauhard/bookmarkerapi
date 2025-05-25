@@ -35,7 +35,7 @@ class UserValidator
         if (!isset($data['name'])) {
             $errors['name'] = 'Name is required';
         } else {
-            if (!self::validateNickname($data['name'])) {
+            if (!self::validateString($data['name'])) {
                 $errors['name'] = 'Name must be between 3 and 20 characters long';
             }
         }

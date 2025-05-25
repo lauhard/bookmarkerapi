@@ -2,21 +2,17 @@
 //bookmark definition
 declare(strict_types=1);
 
-namespace App\Domain\Bookmark;
+namespace App\Domain\Bookmark\Entity;
 
 class Bookmark
 {
-    private ?string $id;
-    private string $page_title;
-    private string $url;
-
     //constructor
-    public function __construct(?string $id, string $page_title, string $url)
-    {
-        $this->id    = $id;
-        $this->page_title = $page_title;
-        $this->url = $url;
-    }
+    public function __construct(
+        private ?string $id = null,
+        private string $user_id,
+        private string $url,
+        private string $page_title,
+    ) {}
     //getters
     public function getId(): ?string
     {
@@ -29,5 +25,9 @@ class Bookmark
     public function getUrl(): string
     {
         return $this->url;
+    }
+    public function getUserId(): string
+    {
+        return $this->user_id;
     }
 }

@@ -16,11 +16,20 @@ class JsonResponder
         $this->responseFactory = $responseFactory;
     }
 
-    public function success(array $data, int $status = 200): ResponseInterface
+    public function success(array|string|null $data = null, int $status = 200, string $message = "success"): ResponseInterface
     {
         $response = $this->responseFactory->createResponse($status);
-        $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
+        $payload = [
+            'message' => $message,
+        ];
+        if ($data !== null) {
+            $payload['data'] = $data;
+        }
+        $response->getBody()->write(json_encode($payload, JSON_PRETTY_PRINT));
+        return $response->withHeader(
+            'Content-Type',
+            'application/json'
+        )->withStatus($status);
     }
 
     public function error(string $message, int $status = 400): ResponseInterface

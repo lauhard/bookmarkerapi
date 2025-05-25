@@ -32,6 +32,7 @@ class UserRegisterDto
         if (!empty($requiredFieldError)) {
             throw new ValidationException(errors: $requiredFieldError);
         }
+
         // Check invalid properties
         $allowedFieldError = self::allowedProperties($data, self::ALLOWED_FIELDS);
         if (!empty($allowedFieldError)) {

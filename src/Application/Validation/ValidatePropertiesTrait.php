@@ -20,10 +20,17 @@ trait ValidatePropertiesTrait
         $passwordRegex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
         return preg_match($passwordRegex, $password) === 1;
     }
-    public static function validateNickname(string $nickname): bool
+    public static function validateString(string $nickname, int $min = 3, int $max = 50): bool
     {
         // Validate nickname length
-        return strlen($nickname) >= 3 && strlen($nickname) <= 20;
+        return strlen($nickname) >= $min && strlen($nickname) <= $max;
+    }
+
+    public static function validateUrl(string $url): bool
+    {
+        // Validate URL format using regex
+        $urlRegex = '/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i';
+        return preg_match($urlRegex, $url) === 1;
     }
 
     public static function requiredProperties(array $data, array $required_fields): ?array
