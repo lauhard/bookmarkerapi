@@ -21,11 +21,11 @@ class BookmarkValidator
             }
         }
 
-        if (!isset($data['page_title'])) {
-            $errors['page_title'] = 'Page - Title is required';
+        if (!isset($data['pageTitle'])) {
+            $errors['pageTitle'] = 'Page - Title is required';
         } else {
-            if (!self::validateString($data['page_title'], 3, 255)) {
-                $errors['page_title'] = 'Title must be between 3 and 255 characters long';
+            if (!self::validateString($data['pageTitle'], 3, 255)) {
+                $errors['pageTitle'] = 'Title must be between 3 and 255 characters long';
             }
         }
 

@@ -6,18 +6,22 @@ namespace App\Application\Actions\Bookmark;
 
 use App\Application\Validation\BookmarkValidator;
 use App\Domain\Bookmark\BookmarkService;
+use App\Domain\List\ListService;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Application\Dto\Bookmark\BookmarkCreateUpdateDto;
+use App\Application\Dto\Bookmark\BookmarkDto;
+use App\Application\Validation\ListValidator;
 use App\Responder\JsonResponder;
 
 class BookmarkCreateAction
 {
     private BookmarkService $bookmarkService;
+    private ListService $listService;
     private JsonResponder $jsonResponder;
-    public function __construct(BookmarkService $bookmarkService, JsonResponder $jsonResponder)
+    public function __construct(BookmarkService $bookmarkService, ListService $listService, JsonResponder $jsonResponder)
     {
         $this->bookmarkService = $bookmarkService;
+        $this->listService = $listService;
         $this->jsonResponder = $jsonResponder;
     }
 
@@ -26,32 +30,33 @@ class BookmarkCreateAction
     {
         $payload = (array) $request->getParsedBody();
 
-        //validate if payload is complete
+        // Validate if payload is complete
         BookmarkValidator::validateBookmark($payload);
 
-        //create a new BookmarkCreateUpdateDto object
-        $bookmarkDto = BookmarkCreateUpdateDto::fromArray($payload);
+        // Check if list_id is present in the query parameters
+        ListValidator::validateList($payload);
 
-        //call the service to create a new bookmark
-        $bookmardId = $this->bookmarkService->createBookmark($bookmarkDto);
+        // Get the bookmarkListIds from the payload
+        $bookmarkListIds = $payload['bookmarkListIds'] ?? null;
+        // Unset the bookmarkListIds from the payload to avoid conflicts
+        unset($payload['bookmarkListIds']);
 
-        if (!$bookmardId) {
-            return $this->jsonResponder->error(
-                message: 'Bookmark creation failed',
-                status: 400
-            );
-        }
+        //create a new BookmarkDto object
+        $bookmarkDto = BookmarkDto::fromArrayToDto($payload);
+
+        // Create the bookmark with Lists
+        $bookmarkId = $this->bookmarkService->createBookmarkWithList(
+            bookmark: $bookmarkDto,
+            listIds: $bookmarkListIds
+        );
 
         $response = $this->jsonResponder->success(
-            data: ['id' => $bookmardId],
+            data: ['id' => $bookmarkId],
             status: 201,
-            message: "Bookmark {$bookmardId} created successfully",
+            message: "Bookmark {$bookmarkId} created successfully",
         );
-        $response = $response->withHeader('Location', "/bookmarks/{$bookmardId}");
+
+        $response = $response->withHeader('Location', "/bookmarks/{$bookmarkId}");
         return $response;
-        //pass a valid dto to the service
-        //minimal required fields are url title and user_id
-        //write bookmark to db
-        //return response with status 201 and the created bookmark
     }
 }

@@ -13,10 +13,15 @@ use App\Domain\User\Auth\TokenIssuerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
-use App\Domain\Bookmark\BookmarkRepositoryInterface;
+use App\Domain\Bookmark\Repository\BookmarkRepositoryInterface; // Ensure this namespace is correct and the class exists
+use App\Domain\List\Repository\ListRepositoryInterface;
+use App\Domain\Setting\Repository\SettingRepositoryInterface;
 use App\Domain\User\Repository\UserRepositoryInterface;
 use App\Infrastruktur\Persistence\PostgresUserRepository;
 use App\Infrastruktur\Persistence\PostgresBookmarkRepository;
+use App\Infrastruktur\Persistence\PostgresListRepository;
+use App\Infrastruktur\Persistence\PostgresSettingRepository;
+
 
 return [
     'settings' => function () {
@@ -68,14 +73,17 @@ return [
     UserRepositoryInterface::class => function ($c) {
         return new PostgresUserRepository($c->get(PDO::class));
     },
+    ListRepositoryInterface::class => function ($c) {
+        return new PostgresListRepository($c->get(PDO::class));
+    },
+    SettingRepositoryInterface::class => function ($c) {
+        return new PostgresSettingRepository($c->get(PDO::class));
+    },
     JsonResponder::class => function (ContainerInterface $c) {
         return new JsonResponder($c->get(ResponseFactoryInterface::class));
     },
     TokenIssuerInterface::class => function (ContainerInterface $c) {
-
         $jwtSettings = $c->get('settings')['jwt'];
         return new TokenIssuer($jwtSettings);
     },
-
-
 ];

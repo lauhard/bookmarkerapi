@@ -140,6 +140,21 @@ CREATE TABLE bookmarker.list_like (
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     PRIMARY KEY (list_id, user_id)
 );
+
+CREATE TABLE bookmarker.user_setting (
+	id text PRIMARY KEY DEFAULT gen_random_uuid(),
+	user_id text NOT NULL REFERENCES bookmarker.user(id) ON DELETE CASCADE,
+	theme text NOT NULL DEFAULT 'default',
+	show_date boolean NOT NULL DEFAULT false,
+	show_description boolean NOT NULL DEFAULT true,
+	show_favicon boolean NOT NULL DEFAULT true,
+	show_lists boolean NOT NULL DEFAULT true,
+	show_tags boolean NOT NULL DEFAULT false
+);
+
+-- index for user settings
+
+
 -- 12. Indexes für Performance (optional aber empfohlen)
 CREATE INDEX idx_bookmarker_users_email ON bookmarker.users(email);
 CREATE INDEX idx_bookmarker_users_nickname ON bookmarker.users(nickname);
@@ -156,3 +171,4 @@ CREATE INDEX idx_bookmarker_category_user_id ON bookmarker.category(user_id);
 CREATE INDEX idx_bookmarker_tag_user_id ON bookmarker.tag(user_id);
 CREATE INDEX idx_bookmarker_list_user_id ON bookmarker.list(user_id);
 CREATE INDEX idx_bookmarker_list_share_token ON bookmarker.list(share_token);
+CREATE INDEX idx_bookmarker_user_setting_user_id ON bookmarker.user_setting(user_id);

@@ -2,21 +2,45 @@
 
 use Psr\Http\Message\ServerRequestInterface;
 use App\Application\Middleware\HttpErrorHandler;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 return function ($app) {
-    // Middleware für CORS
-    $app->add(function ($request, $handler) {
-        $response = $handler->handle($request);
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    });
-    $app->addRoutingMiddleware();
-    // add json body parser
+
     $app->addBodyParsingMiddleware();
 
+    $app->addRoutingMiddleware();
     $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+
+
+    // Middleware für CORS
+    $app->add(function (ServerRequestInterface $request, $handler) use ($app): ResponseInterface {
+        $origin = $request->getHeaderLine('Origin');
+        $allowedOrigins = ['http://localhost:5173', 'https://bookmarker.alau.at'];
+
+        if ($request->getMethod() === 'OPTIONS') {
+            $response = $app->getResponseFactory()->createResponse(200);
+        } else {
+            $response = $handler->handle($request);
+        }
+
+        // Nur wenn Origin erlaubt ist
+        if (in_array($origin, $allowedOrigins)) {
+            $response = $response
+                ->withHeader('Access-Control-Allow-Origin', $origin)
+                ->withHeader('Access-Control-Allow-Credentials', 'true')
+                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept')
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+                ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+                ->withHeader('Pragma', 'no-cache')
+                ->withHeader('Vary', 'Origin');
+        }
+
+        return $response;
+    });
+
+
+    // add json body parser
     //$customErrorHandler = function (
     //    ServerRequestInterface $request,
     //    Throwable $exception,

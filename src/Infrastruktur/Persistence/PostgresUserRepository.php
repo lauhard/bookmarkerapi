@@ -13,6 +13,13 @@ use App\Domain\User\Repository\UserRepositoryInterface;
 class PostgresUserRepository implements UserRepositoryInterface
 {
     public function __construct(private PDO $pdo) {}
+
+
+
+
+
+
+    //NOTE: NOT USED ATM beacuse better_auth is handeling user registration and authentication
     public function save(UserRegister $user): ?User
     {
         $stmt = $this->pdo->prepare(
