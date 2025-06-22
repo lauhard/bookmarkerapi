@@ -35,7 +35,7 @@ class PostgresListRepository implements ListRepositoryInterface
      */
     public function findByUserId(string $userId): array
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM bookmarker.list WHERE user_id = :user_id');
+        $stmt = $this->pdo->prepare('SELECT * FROM bookmarker.list WHERE user_id = :user_id ');
         $stmt->execute(['user_id' => $userId]);
         $lists = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -182,7 +182,37 @@ class PostgresListRepository implements ListRepositoryInterface
         }
     }
 
+    public function updateList(string $listId, array $data): ?string
+    {
+        // Prepare the SQL statement with named parameters
+        $setClause = [];
+        foreach ((array)$data as $key => $value) {
+            if ($value === null) {
+                continue; // Skip null values
+            }
+            $setClause[] = "$key = :$key";
+        }
+        $setClause = implode(', ', $setClause);
 
+        $stmt = $this->pdo->prepare("UPDATE bookmarker.list SET $setClause WHERE id = :id RETURNING id");
+        foreach ($data as $key => $value) {
+            if ($value === null) {
+                continue; // Skip null values
+            }
+            $stmt->bindValue(":$key", $value, $this->getPdoType($value));
+        }
+        $stmt->bindValue(':id', $listId, \PDO::PARAM_STR);
+
+        $id = null;
+        // Execute the statement and fetch the updated data
+        if ($stmt->execute()) {
+            $id = $stmt->fetchColumn();
+        } else {
+            // Handle the case where the update fails
+            throw new \RuntimeException('Failed to update list: ' . implode(', ', $stmt->errorInfo()));
+        }
+        return $id; // Return the ID of the updated list
+    }
 
 
 
@@ -195,5 +225,15 @@ class PostgresListRepository implements ListRepositoryInterface
         $maxSortOrder = $stmt->fetchColumn();
 
         return $maxSortOrder !== false ? (int)$maxSortOrder + 1 : 1; // Return 1 if no bookmarks exist
+    }
+
+    public function getPdoType(mixed $value): int
+    {
+        return match (gettype($value)) {
+            'boolean' => \PDO::PARAM_BOOL,
+            'integer' => \PDO::PARAM_INT,
+            'NULL'    => \PDO::PARAM_NULL,
+            default   => \PDO::PARAM_STR,
+        };
     }
 }

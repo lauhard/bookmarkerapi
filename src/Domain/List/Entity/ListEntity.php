@@ -8,12 +8,12 @@ class ListEntity
 {
     public function __construct(
         private ?string $id = null,
-        private string $user_id,
-        private string $name,
+        private ?string $user_id = null,
+        private ?string $name = null,
         private bool $is_public = false,
         private ?string $share_token = null,
-        private ?\DateTimeImmutable $created_at,
-        private ?\DateTimeImmutable $updated_at,
+        private ?\DateTimeImmutable $created_at = null,
+        private ?\DateTimeImmutable $updated_at = null,
     ) {}
 
     /**
@@ -23,11 +23,11 @@ class ListEntity
     {
         return $this->id;
     }
-    public function getUserId(): string
+    public function getUserId(): ?string
     {
         return $this->user_id;
     }
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

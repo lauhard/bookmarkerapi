@@ -13,7 +13,7 @@ class ListDto
         public ?string $id = null,
         public ?string $userId = null,
         public ?string $name = null,
-        public ?bool $isPublic = null,
+        public ?bool $isPublic = false,
         public ?string $shareToken = null,
         public ?\DateTimeImmutable $createdAt = null,
         public ?\DateTimeImmutable $updatedAt = null
@@ -31,7 +31,7 @@ class ListDto
             id: $data->getId(),
             userId: $data->getUserId(),
             name: $data->getName(),
-            isPublic: $data->isPublic() ?? null,
+            isPublic: $data->isPublic() ?? false,
             shareToken: $data->getShareToken() ?? null,
             createdAt: $data->getCreatedAt() ?? null,
             updatedAt: $data->getUpdatedAt() ?? null,
@@ -43,6 +43,19 @@ class ListDto
      * @param self $data The ListDto object to convert.
      * @return array An associative array representation of the ListDto.
      */
+    public static function fromDtoResponseToArray(self $data): array
+    {
+        return [
+            'id' => $data->getId(),
+            'userId' => $data->getUserId(), // Updated to use getUserId()
+            'name' => $data->getName(), // Updated to use getName()
+            'isPublic' => $data->isPublic(),
+            'shareToken' => $data->getShareToken(), // Updated to use getShareToken()
+            'createdAt' => $data->getCreatedAt()?->format('Y-m-d H:i:s'), // Updated to use getCreatedAt()
+            'updatedAt' => $data->getUpdatedAt()?->format('Y-m-d H:i:s'), // Updated to use getUpdatedAt()
+        ];
+    }
+
     public static function fromDtoToArray(self $data): array
     {
         return [
@@ -58,16 +71,16 @@ class ListDto
 
     public static function fromEntityToArray(ListEntity $data): array
     {
-        return self::fromDtoToArray(self::fromEntityToDto($data));
+        return self::fromDtoResponseToArray(self::fromEntityToDto($data));
     }
 
     public static function fromArrayToDto(array $data): self
     {
         return new self(
-            id: $data['id'] ?? '',
-            userId: $data['userId'] ?? '',
-            name: $data['name'] ?? '',
-            isPublic: $data['isPublic'] ?? null,
+            id: $data['id'] ?? null,
+            userId: $data['userId'] ?? null,
+            name: $data['name'] ?? null,
+            isPublic: $data['isPublic'] ?? false,
             shareToken: $data['shareToken'] ?? null,
             createdAt: isset($data['createdAt']) ? new \DateTimeImmutable($data['createdAt']) : null,
             updatedAt: isset($data['updatedAt']) ? new \DateTimeImmutable($data['updatedAt']) : null,
@@ -87,7 +100,7 @@ class ListDto
 
     public static function fromListEntityToArrayCollection(array $entities): array
     {
-        return array_map(fn($entity) => self::fromDtoToArray(self::fromEntityToDto($entity)), $entities);
+        return array_map(fn($entity) => self::fromDtoResponseToArray(self::fromEntityToDto($entity)), $entities);
     }
 
     public function getId(): ?string

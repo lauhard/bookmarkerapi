@@ -25,7 +25,7 @@ $settings = [
         'database' => getenv('POSTGRES_DB_NAME') ?: 'dev02',
         'user' => getenv('POSTGRES_USER') ?: 'andreas',
         //password kommt aus docker secret nur für produktive Umgebungen
-        //'password' => trim(file_get_contents(getenv('POSTGRES_DB_PASSWORD_FILE')) ?: file_get_contents('/run/secrets/postgres_db_password')),
+        // 'password' => trim(file_get_contents(getenv('POSTGRES_DB_PASSWORD_FILE')) ?: file_get_contents('/run/secrets/postgres_db_password')),
         'password' => 'demo', // nur für lokale Entwicklung
         'encoding' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',

@@ -52,4 +52,6 @@ interface ListRepositoryInterface
     public function updateListBookmark(string $bookmarkId, array $listIds): bool;
 
     public function deleteList(string $listId): bool;
+
+    public function updateList(string $listId, array $data): ?string;
 }

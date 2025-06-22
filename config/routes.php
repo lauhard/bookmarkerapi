@@ -16,6 +16,7 @@ use App\Application\Actions\List\ListsReadAction;
 use App\Application\Actions\List\ListReadAction;
 use App\Application\Actions\List\ListCreateAction;
 use App\Application\Actions\List\ListDeleteAction;
+use App\Application\Actions\List\ListUpdateAction;
 use App\Application\Actions\Setting\SettingUpdateAction;
 use App\Application\Actions\Setting\SettingReadAction;
 
@@ -45,6 +46,7 @@ return function (App $app) {
 
         $group->post('/lists', ListCreateAction::class);
         $group->delete('/lists/{id}', ListDeleteAction::class);
+        $group->patch('/lists/{id}', ListUpdateAction::class);
 
         $group->get('/bookmarks/{id}', GetBookmarkAction::class);
         $group->post('/bookmarks', BookmarkCreateAction::class);

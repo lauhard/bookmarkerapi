@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\List;
 
 use App\Application\Dto\List\ListDto;
+use App\Domain\List\Factory\ListFactory;
 use App\Domain\List\Repository\ListRepositoryInterface;
 
 class ListService
@@ -80,6 +81,13 @@ class ListService
 
         $result = $this->listRepository->updateListBookmark($bookmarkId, $listIds);
         return $result; // Return the actual result of the update operation.
+    }
+
+    public function updateList(string $id, ListDto $listDto): ?string
+    {
+        // Update the list with the provided ListDto
+        $listArray = ListFactory::toArray($listDto);
+        return $this->listRepository->updateList($id, $listArray);
     }
 
     /**
